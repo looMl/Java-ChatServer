@@ -11,21 +11,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * ServerMain che legge
+ * Server Reader
  *
- * @author Luca
+ * @author Luca Landolfo
  */
 public class ServerReader extends Thread {
 
-    private Socket socket;
+    private final Socket socket;
     private OutputStreamWriter strOut;
     private BufferedWriter buffer;
     private PrintWriter out;
     private boolean isUsed;
     private String clientName;
+    private final Tools tool;
 
     public ServerReader(Socket socket) {
         this.socket = socket;
+        this.tool = new Tools();
     }
 
     @Override
@@ -40,11 +42,11 @@ public class ServerReader extends Thread {
                     new InputStreamReader(this.socket.getInputStream()));
 
             while (true) {
-                out.println("Insert a nickname: ");
-                clientName = in.readLine();
+                out.println("Server> Insert a nickname: ");
+                this.clientName = in.readLine();
                 for (HashMap.Entry<Socket, String> check : ServerMain.username.entrySet()) {
-                    if (clientName.equals(check.getValue())) {
-                        out.println("The username is already used!");
+                    if (this.clientName.equals(check.getValue())) {
+                        out.println("Server> The username is already used!");
                         isUsed = true;
                         break;
                     } else {
@@ -52,16 +54,39 @@ public class ServerReader extends Thread {
                     }
                 }
                 if (!isUsed) {
-                    ServerMain.container.addClient(clientName);
-                    ServerMain.username.put(this.socket, clientName);
+                    ServerMain.container.addClient(this.clientName);
+                    ServerMain.username.put(this.socket, this.clientName);
                     break;
                 }
             }
 
             while (true) {
                 String msg = in.readLine();
-                if (!msg.equals("")) {
-                    ServerMain.container.addMessage(clientName, msg);
+                if (!msg.isEmpty()) {
+                    if (tool.isCommand(msg)) {
+                        
+                        if (msg.equals("/quit")) {
+                            out.println("Server> " + this.clientName + " disconnected from your channel.");
+                            ServerMain.username.remove(this.socket);
+                            ServerMain.container.remove(this.clientName);
+
+                        } else if (msg.contains("/msg")) {
+                            String[] command = msg.split(" ");
+                            Boolean found = false;
+                            for (HashMap.Entry<Socket, String> check : ServerMain.username.entrySet()) {
+                                if (command[1].trim().equals(check.getValue())) {
+                                    tool.sendPM(check.getKey(), this.clientName, command[2]);
+                                    found = true;
+                                }
+                            }
+                            if (!found) {
+                                out.println("Server> The user doesn't exist!");
+                            }
+
+                        }
+                    } else {
+                        ServerMain.container.addMessage(clientName, msg);
+                    }
                 }
             }
 
