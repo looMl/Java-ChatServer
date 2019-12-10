@@ -1,5 +1,4 @@
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -8,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Server che scrive
+ * Server writer
  *
  * @author Luca
  */
@@ -25,22 +24,21 @@ public class Thread1 extends Thread {
 
     @Override
     public void run() {
-        System.out.println(Server.container.getSize() + " pd");
         while (true) {
-            
-            if (Server.container.getSize() > size) {
-                Server.username.entrySet().forEach((check) -> {
-                    try {
-                        osw = new OutputStreamWriter(check.getKey().getOutputStream());
-                    } catch (IOException ex) {
-                        Logger.getLogger(Thread1.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    bw = new BufferedWriter(osw);
-                    out = new PrintWriter(bw, true);
-                    out.println(Server.container.toString());
-                });
-                System.out.println(Server.container.getSize() + " pd");
-                size++;
+            synchronized (Server.container) {
+                if (Server.container.getSize() > this.size) {
+                    Server.username.entrySet().forEach((check) -> {
+                        try {
+                            osw = new OutputStreamWriter(check.getKey().getOutputStream());
+                        } catch (IOException ex) {
+                            Logger.getLogger(Thread1.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        bw = new BufferedWriter(osw);
+                        out = new PrintWriter(bw, true);
+                        out.println(Server.container.toString(check.getValue()));
+                    });
+                    this.size++;
+                }
             }
         }
     }
