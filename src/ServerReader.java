@@ -11,11 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Server che legge
+ * ServerMain che legge
  *
  * @author Luca
  */
-public class ThreadServer extends Thread {
+public class ServerReader extends Thread {
 
     private Socket socket;
     private OutputStreamWriter strOut;
@@ -24,7 +24,7 @@ public class ThreadServer extends Thread {
     private boolean isUsed;
     private String clientName;
 
-    public ThreadServer(Socket socket) {
+    public ServerReader(Socket socket) {
         this.socket = socket;
     }
 
@@ -34,17 +34,17 @@ public class ThreadServer extends Thread {
             strOut = new OutputStreamWriter(this.socket.getOutputStream());
             buffer = new BufferedWriter(strOut);
             out = new PrintWriter(buffer, true);
-            out.println(socket.getInetAddress() + " has just connected.");
+            out.println(this.socket.getInetAddress() + " has just connected.");
 
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(this.socket.getInputStream()));
 
             while (true) {
-                out.println("Imposta un nickname: ");
+                out.println("Insert a nickname: ");
                 clientName = in.readLine();
-                for (HashMap.Entry<Socket, String> check : Server.username.entrySet()) {
+                for (HashMap.Entry<Socket, String> check : ServerMain.username.entrySet()) {
                     if (clientName.equals(check.getValue())) {
-                        out.println("L'username è già in uso!");
+                        out.println("The username is already used!");
                         isUsed = true;
                         break;
                     } else {
@@ -52,8 +52,8 @@ public class ThreadServer extends Thread {
                     }
                 }
                 if (!isUsed) {
-                    Server.container.addClient(clientName);
-                    Server.username.put(this.socket, clientName);
+                    ServerMain.container.addClient(clientName);
+                    ServerMain.username.put(this.socket, clientName);
                     break;
                 }
             }
@@ -61,12 +61,12 @@ public class ThreadServer extends Thread {
             while (true) {
                 String msg = in.readLine();
                 if (!msg.equals("")) {
-                    Server.container.addMessage(clientName, msg);
+                    ServerMain.container.addMessage(clientName, msg);
                 }
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(Thread1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -8,7 +8,7 @@ import java.util.HashMap;
  * Main server class
  * @author Luca
  */
-public class Server {
+public class ServerMain {
 
     public static MessageMap container = new MessageMap();
     public static HashMap<Socket, String> username = new HashMap<>();
@@ -16,11 +16,11 @@ public class Server {
 
     public static void main(String[] args) throws IOException {
         ServerSocket serverSocket = new ServerSocket(PORT);
-        System.out.println("Server avviato!\nSocket del server: " + serverSocket);
-        new Thread1().start();
+        System.out.println("Server running!");
+        new ServerWriter().start();
 
         while (true) {
-            new ThreadServer(serverSocket.accept()).start();
+            new ServerReader(serverSocket.accept()).start();
         }
     }
 

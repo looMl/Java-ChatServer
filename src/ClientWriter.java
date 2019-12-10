@@ -14,32 +14,40 @@ import java.util.logging.Logger;
  *
  * @author Luca
  */
-public class ThreadWriteHost implements Runnable {
+public class ClientWriter implements Runnable {
 
     private Socket socket = null;
+    private String userInput;
 
     /**
      *
      * @param socket
      */
-    public ThreadWriteHost(Socket socket) {
+    public ClientWriter(Socket socket) {
         this.socket = socket;
     }
 
     @Override
     public void run() {
         try {
-            OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream());
+            OutputStreamWriter osw = new OutputStreamWriter(this.socket.getOutputStream());
             BufferedWriter bw = new BufferedWriter(osw);
             PrintWriter out = new PrintWriter(bw, true);
             BufferedReader stdIn = new BufferedReader(new InputStreamReader(System.in));
-            String userInput;
+
             while (true) {
                 userInput = stdIn.readLine();
-                out.println(userInput);
+                if (userInput.equals("/quit")) {
+                    this.socket.close();
+                    stdIn.close();
+                    osw.close();
+                    break;
+                } else {
+                    out.println(userInput);
+                }
             }
         } catch (IOException ex) {
-            Logger.getLogger(ThreadWriteHost.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

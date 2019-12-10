@@ -1,7 +1,8 @@
+
 import java.net.*;
 import java.io.*;
 
-public class EchoClient {
+public class ClientMain {
 
     public static void main(String[] args) throws IOException {
 
@@ -13,8 +14,8 @@ public class EchoClient {
             System.out.println("EchoClient: avviato");
             System.out.println("Socket del client: " + socket);
 
-            new ThreadHost(socket).start();
-            new ThreadWriteHost(socket).run();
+            new ClientReader(socket).start();
+            new ClientWriter(socket).run();
 
         } catch (UnknownHostException e) {
             System.err.println("Host non riconosciuto... " + indirizzo);

@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  *
  * @author Luca
  */
-public class ThreadHost extends Thread {
+public class ClientReader extends Thread {
 
     private Socket socket = null;
 
@@ -19,7 +19,7 @@ public class ThreadHost extends Thread {
      *
      * @param socket
      */
-    public ThreadHost(Socket socket) {
+    public ClientReader(Socket socket) {
         this.socket = socket;
     }
 
@@ -27,14 +27,14 @@ public class ThreadHost extends Thread {
     public void run() {
         try {
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
+                    new InputStreamReader(this.socket.getInputStream()));
 
             while (true) {
                 System.out.println(in.readLine());
             }
 
         } catch (IOException ex) {
-            Logger.getLogger(Thread1.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ServerWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
