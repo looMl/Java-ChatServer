@@ -71,7 +71,7 @@ public class ServerReader extends Thread {
                             ServerMain.container.remove(this.clientName);
 
                         } else if (msg.contains("/msg")) {
-                            String[] command = msg.split(" ");
+                            String[] command = msg.split(" ", 3);
                             Boolean found = false;
                             for (HashMap.Entry<Socket, String> check : ServerMain.username.entrySet()) {
                                 if (command[1].trim().equals(check.getValue())) {
