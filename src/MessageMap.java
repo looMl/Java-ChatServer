@@ -1,6 +1,4 @@
 
-import java.util.Enumeration;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -11,42 +9,29 @@ public class MessageMap {
 
     static ConcurrentHashMap map;
     private int size;
+    private String value;
 
     public MessageMap() {
         this.map = new ConcurrentHashMap<String, String>();
+        this.size = 0;
+        this.value = "";
     }
 
-    public void addClient(String user){
+    public void addClient(String user) {
         map.put(user, "");
-        size++;
     }
-    
-    public void addMessage(String user, String msg){
+
+    public void addMessage(String user, String msg) {
         map.put(user, msg);
+        this.size++;
     }
-    
-    @Override
-    public String toString(){
-        String value = (String) map.get(map.size() - 1);
-        return getKey() + ": " + value;
+
+    public String toString(String user) {
+        value = (String) map.get(user);
+        return user + ": " + value;
     }
-    
-    public String getKey(){
-        Enumeration key = map.keys();
-        String username = "";
-        
-        while(key.hasMoreElements()){
-            username = (String) key.nextElement();
-        }
-        
-        return username;
-    }
-    
-    public Set entrySet(){
-        return map.entrySet();
-    }
-    
-    public int getSize(){
+
+    public int getSize() {
         return size;
     }
     
