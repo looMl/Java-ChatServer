@@ -10,9 +10,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Thread client che scrive
+ * Client writer
  *
- * @author Luca
+ * @author Luca Landolfo
  */
 public class ClientWriter implements Runnable {
 
@@ -41,6 +41,7 @@ public class ClientWriter implements Runnable {
                     this.socket.close();
                     stdIn.close();
                     osw.close();
+                    System.out.println("Disconnected.");
                     break;
                 } else {
                     out.println(userInput);

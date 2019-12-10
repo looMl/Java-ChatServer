@@ -5,8 +5,9 @@ import java.net.Socket;
 import java.util.HashMap;
 
 /**
- * Main server class
- * @author Luca
+ * Server main class
+ *
+ * @author Luca Landolfo
  */
 public class ServerMain {
 

@@ -2,6 +2,11 @@
 import java.net.*;
 import java.io.*;
 
+/**
+ * Client main class
+ *
+ * @author Luca Landolfo
+ */
 public class ClientMain {
 
     public static void main(String[] args) throws IOException {
@@ -24,6 +29,5 @@ public class ClientMain {
             System.err.println("Non riesco ad avere I/O per la connessione a: " + indirizzo);
             System.exit(1);
         }
-        System.out.println("EchoClient: passo e chiudo...");
     }
 }

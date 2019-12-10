@@ -7,9 +7,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Thread client che legge
+ * Client Reader
  *
- * @author Luca
+ * @author Luca Landolfo
  */
 public class ClientReader extends Thread {
 

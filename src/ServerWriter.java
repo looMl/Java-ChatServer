@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 /**
  * Server writer class
  *
- * @author Luca
+ * @author Luca Landolfo
  */
 public class ServerWriter extends Thread {
 
