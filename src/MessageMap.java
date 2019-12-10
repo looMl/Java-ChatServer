@@ -2,8 +2,9 @@
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Class that contains data and works with it
  *
- * @author Luca
+ * @author Luca Landolfo
  */
 public class MessageMap {
 
@@ -29,22 +30,27 @@ public class MessageMap {
         incrementSize();
     }
 
+    public void remove(String username) {
+        map.remove(username);
+        System.out.println(username + " successfully removed.");
+    }
+
     public int getSize() {
         return this.size;
     }
-    
-    private void incrementSize(){
+
+    private void incrementSize() {
         this.size++;
     }
 
-    public String getValue() {
+    private String getValue() {
         return value;
     }
 
-    public void setValue() {
+    private void setValue() {
         this.value = (String) map.get(getLatest());
     }
-    
+
     private String getLatest() {
         return latest;
     }
@@ -52,11 +58,11 @@ public class MessageMap {
     private void setLatest(String latest) {
         this.latest = latest;
     }
-    
+
     @Override
     public String toString() {
         setValue();
         return getLatest() + ": " + getValue();
     }
-    
+
 }
