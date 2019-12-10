@@ -31,13 +31,13 @@ public class ThreadServer extends Thread {
     @Override
     public void run() {
         try {
-            strOut = new OutputStreamWriter(socket.getOutputStream());
+            strOut = new OutputStreamWriter(this.socket.getOutputStream());
             buffer = new BufferedWriter(strOut);
             out = new PrintWriter(buffer, true);
             out.println(socket.getInetAddress() + " has just connected.");
 
             BufferedReader in = new BufferedReader(
-                    new InputStreamReader(socket.getInputStream()));
+                    new InputStreamReader(this.socket.getInputStream()));
 
             while (true) {
                 out.println("Imposta un nickname: ");
@@ -52,19 +52,17 @@ public class ThreadServer extends Thread {
                     }
                 }
                 if (!isUsed) {
-                    System.out.println("ok");
-                    out.println("ok");
                     Server.container.addClient(clientName);
-                    Server.username.put(socket, clientName);
+                    Server.username.put(this.socket, clientName);
                     break;
                 }
-
             }
 
             while (true) {
                 String msg = in.readLine();
-                System.out.println(msg);
-                Server.container.addMessage(clientName, msg);
+                if (!msg.equals("")) {
+                    Server.container.addMessage(clientName, msg);
+                }
             }
 
         } catch (IOException ex) {

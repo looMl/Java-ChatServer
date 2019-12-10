@@ -6,16 +6,16 @@ public class EchoClient {
     public static void main(String[] args) throws IOException {
 
         String indirizzo = "localhost";
-        
+
         try {
 
             Socket socket = new Socket(indirizzo, 5000);
             System.out.println("EchoClient: avviato");
             System.out.println("Socket del client: " + socket);
-           
+
             new ThreadHost(socket).start();
             new ThreadWriteHost(socket).run();
-            
+
         } catch (UnknownHostException e) {
             System.err.println("Host non riconosciuto... " + indirizzo);
             System.exit(1);

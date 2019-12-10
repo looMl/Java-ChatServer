@@ -5,7 +5,7 @@ import java.net.Socket;
 import java.util.HashMap;
 
 /**
- *
+ * Main server class
  * @author Luca
  */
 public class Server {
@@ -18,10 +18,10 @@ public class Server {
         ServerSocket serverSocket = new ServerSocket(PORT);
         System.out.println("Server avviato!\nSocket del server: " + serverSocket);
         new Thread1().start();
-        
-        while (true){
+
+        while (true) {
             new ThreadServer(serverSocket.accept()).start();
-        }   
+        }
     }
 
 }

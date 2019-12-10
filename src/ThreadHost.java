@@ -8,12 +8,13 @@ import java.util.logging.Logger;
 
 /**
  * Thread client che legge
+ *
  * @author Luca
  */
-public class ThreadHost extends Thread{
-    
+public class ThreadHost extends Thread {
+
     private Socket socket = null;
-    
+
     /**
      *
      * @param socket
@@ -21,18 +22,17 @@ public class ThreadHost extends Thread{
     public ThreadHost(Socket socket) {
         this.socket = socket;
     }
-    
+
     @Override
     public void run() {
-                  
-        try {       
+        try {
             BufferedReader in = new BufferedReader(
-              new InputStreamReader(socket.getInputStream()));
-            
-            while(true){
+                    new InputStreamReader(socket.getInputStream()));
+
+            while (true) {
                 System.out.println(in.readLine());
-            }  
-            
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(Thread1.class.getName()).log(Level.SEVERE, null, ex);
         }

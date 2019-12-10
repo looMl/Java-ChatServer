@@ -9,15 +9,15 @@ import java.net.Socket;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  * Thread client che scrive
+ *
  * @author Luca
  */
 public class ThreadWriteHost implements Runnable {
-    
+
     private Socket socket = null;
-    
+
     /**
      *
      * @param socket
@@ -25,9 +25,9 @@ public class ThreadWriteHost implements Runnable {
     public ThreadWriteHost(Socket socket) {
         this.socket = socket;
     }
-    
+
     @Override
-    public void run(){
+    public void run() {
         try {
             OutputStreamWriter osw = new OutputStreamWriter(socket.getOutputStream());
             BufferedWriter bw = new BufferedWriter(osw);
