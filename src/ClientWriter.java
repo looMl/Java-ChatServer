@@ -38,11 +38,8 @@ public class ClientWriter implements Runnable {
             while (true) {
                 userInput = stdIn.readLine();
                 if (userInput.equals("/quit")) {
-                    this.socket.close();
-                    stdIn.close();
-                    osw.close();
-                    System.out.println("Disconnected.");
-                    break;
+                    out.println("/quit");
+                    System.exit(0);
                 } else {
                     out.println(userInput);
                 }

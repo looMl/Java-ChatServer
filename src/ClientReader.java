@@ -3,6 +3,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +31,12 @@ public class ClientReader extends Thread {
                     new InputStreamReader(this.socket.getInputStream()));
 
             while (true) {
-                System.out.println(in.readLine());
+                try {
+                    System.out.println(in.readLine());
+                } catch (SocketException ek) {
+                    System.out.println("\nLost connection to the server...\nDisconnected.");
+                    System.exit(0);
+                }
             }
 
         } catch (IOException ex) {

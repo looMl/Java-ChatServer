@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Luca Landolfo
  */
 public class ServerReader extends Thread {
-
+    
     private final Socket socket;
     private OutputStreamWriter strOut;
     private BufferedWriter buffer;
@@ -24,23 +24,22 @@ public class ServerReader extends Thread {
     private boolean isUsed;
     private String clientName;
     private final Tools tool;
-
+    
     public ServerReader(Socket socket) {
         this.socket = socket;
         this.tool = new Tools();
     }
-
+    
     @Override
     public void run() {
         try {
             strOut = new OutputStreamWriter(this.socket.getOutputStream());
             buffer = new BufferedWriter(strOut);
             out = new PrintWriter(buffer, true);
-            out.println(this.socket.getInetAddress() + " has just connected.");
-
+            
             BufferedReader in = new BufferedReader(
                     new InputStreamReader(this.socket.getInputStream()));
-
+            
             while (true) {
                 out.println("Server> Insert a nickname: ");
                 this.clientName = in.readLine();
@@ -56,40 +55,48 @@ public class ServerReader extends Thread {
                 if (!isUsed) {
                     ServerMain.container.addClient(this.clientName);
                     ServerMain.username.put(this.socket, this.clientName);
+                    tool.userMessage(this.clientName, "connected");
                     break;
                 }
             }
-
+            
             while (true) {
                 String msg = in.readLine();
                 if (!msg.isEmpty()) {
                     if (tool.isCommand(msg)) {
                         
                         if (msg.equals("/quit")) {
-                            out.println("Server> " + this.clientName + " disconnected from your channel.");
+                            tool.userMessage(this.clientName, "disconnected");
                             ServerMain.username.remove(this.socket);
                             ServerMain.container.remove(this.clientName);
-
+                            break;
+                            
                         } else if (msg.contains("/msg")) {
                             String[] command = msg.split(" ", 3);
-                            Boolean found = false;
-                            for (HashMap.Entry<Socket, String> check : ServerMain.username.entrySet()) {
-                                if (command[1].trim().equals(check.getValue())) {
-                                    tool.sendPM(check.getKey(), this.clientName, command[2]);
-                                    found = true;
+                            if (command.length == 2) {
+                                out.println("Server> The message is missing!");
+                            } else {
+                                Boolean found = false;
+                                for (HashMap.Entry<Socket, String> check : ServerMain.username.entrySet()) {
+                                    if (command[1].trim().equals(check.getValue())) {
+                                        tool.sendPM(check.getKey(), this.clientName, command[2]);
+                                        found = true;
+                                    }
+                                }
+                                if (!found) {
+                                    out.println("Server> The user doesn't exist!");
                                 }
                             }
-                            if (!found) {
-                                out.println("Server> The user doesn't exist!");
-                            }
-
                         }
                     } else {
                         ServerMain.container.addMessage(clientName, msg);
                     }
                 }
             }
-
+            //If it exists from the while(true) it means that the user left.
+            //So we have to close her/his socket.
+            this.socket.close();
+            
         } catch (IOException ex) {
             Logger.getLogger(ServerWriter.class.getName()).log(Level.SEVERE, null, ex);
         }
