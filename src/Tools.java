@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 /**
  * Class that contains some useful methods
- * 
+ *
  * @author Luca Landolfo
  */
 public class Tools {
@@ -38,6 +38,29 @@ public class Tools {
         bw = new BufferedWriter(osw);
         out = new PrintWriter(bw, true);
         out.println(user + " whispered you: " + msg);
+    }
+
+    public void userMessage(String username, String option) {
+        String message = checkOption(option);
+        ServerMain.username.entrySet().forEach((check) -> {
+            try {
+                osw = new OutputStreamWriter(check.getKey().getOutputStream());
+            } catch (IOException ex) {
+                Logger.getLogger(ServerWriter.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            bw = new BufferedWriter(osw);
+            out = new PrintWriter(bw, true);
+            out.println("Server> " + username + message);
+        });
+    }
+
+    private String checkOption(String option) {
+        String message;
+        if (option.equals("disconnected")) {
+            return message = " disconnected from your channel.";
+        } else {
+            return message = " has connected.";
+        }
     }
 
 }
